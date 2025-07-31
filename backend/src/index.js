@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
+import psychologistRoutes from "./routes/psychologist.routes.js";
+
 dotenv.config();
 
 const app = express();
@@ -11,9 +13,8 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
 
-/* app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
-}); */
+// Rutas
+app.use("/api/psychologists", psychologistRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -23,17 +24,3 @@ mongoose
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
-
-/* app.get('/', (req, res) => {
-  res.send('API corriendo...');
-});
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('MongoDB conectado');
-    app.listen(PORT, () => {
-      console.log(`Servidor corriendo en puerto ${PORT}`);
-    });
-  })
-  .catch((err) => console.error(err)); */
