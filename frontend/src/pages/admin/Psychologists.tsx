@@ -1,12 +1,15 @@
+// librerias
 import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+// logica
 import { getAllPsychologists } from "../../services/psychologistService.ts";
-import PsychologistTable from "../../components/psychologists/PsychologistTable.tsx";
 import type { Psychologist } from "../../types/psychologist.ts";
+// componentes
+import PsychologistTable from "../../components/psychologists/PsychologistTable.tsx";
 import PsychologistFormDialog from "../../components/psychologists/PsychologistFormDialog.tsx";
 
 const Psychologists = () => {
-  const [psychologists, setPsychologists] = useState([]);
+  const [psychologists, setPsychologists] = useState<Psychologist[]>([]);
   const [openForm, setOpenForm] = useState(false);
   const [selectedPsych, setSelectedPsych] = useState<Psychologist | null>(null);
 

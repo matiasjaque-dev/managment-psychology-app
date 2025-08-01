@@ -12,6 +12,7 @@ import {
 } from "../../services/psychologistService";
 import React, { useEffect, useState } from "react";
 import type { Psychologist } from "../../types/psychologist";
+import { initPsychologistForm } from "../../constants/forms";
 
 interface Props {
   open: boolean;
@@ -20,24 +21,13 @@ interface Props {
   reload: () => Promise<void>;
 }
 
-const initForm: Psychologist = {
-  name: "",
-  email: "",
-  specialty: "",
-  password: "",
-  rut: "",
-  phone: "",
-  gender: "",
-  address: "",
-};
-
 const PsychologistFormDialog: React.FC<Props> = ({
   open,
   onClose,
   psychologist,
   reload,
 }) => {
-  const [form, setForm] = useState(initForm);
+  const [form, setForm] = useState(initPsychologistForm);
 
   useEffect(() => {
     if (psychologist) {
@@ -52,7 +42,7 @@ const PsychologistFormDialog: React.FC<Props> = ({
         address: psychologist.address ?? "",
       });
     } else {
-      setForm(initForm);
+      setForm(initPsychologistForm);
     }
   }, [psychologist]);
 
@@ -62,7 +52,7 @@ const PsychologistFormDialog: React.FC<Props> = ({
     } else {
       await createPsychologist(form);
     }
-    setForm(initForm);
+    setForm(initPsychologistForm);
     reload();
     onClose();
   };
