@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import psychologistRoutes from "./routes/psychologist.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const PORT = process.env.PORT || 4000;
 
 // Rutas
 app.use("/api/psychologists", psychologistRoutes);
+app.use("/api/auth", authRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
