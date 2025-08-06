@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminPsychsPage from "./pages/admin/Psychologists";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -11,7 +12,15 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/admin" element={<h1>Vista Admin</h1>} />
           <Route path="/psychologist" element={<h1>Vista Psicólogo</h1>} />
-          <Route path="/admin/psychs" element={<AdminPsychsPage />} />
+          <Route path="/test" element={<AdminPsychsPage />} />
+          <Route
+            path="/admin/psychs"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminPsychsPage />
+              </PrivateRoute>
+            }
+          />
           {/* Agrega tus otras rutas aquí */}
         </Routes>
       </Router>

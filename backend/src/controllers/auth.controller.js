@@ -28,6 +28,8 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
+    console.log("Token:", token);
+    console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
 
     res.status(200).json({
       token,

@@ -7,20 +7,26 @@ import type { Psychologist } from "../../types/psychologist.ts";
 // componentes
 import PsychologistTable from "../../components/psychologists/PsychologistTable.tsx";
 import PsychologistFormDialog from "../../components/psychologists/PsychologistFormDialog.tsx";
+import { useAuth } from "../../context/AuthContext.tsx";
 
 const Psychologists = () => {
   const [psychologists, setPsychologists] = useState<Psychologist[]>([]);
   const [openForm, setOpenForm] = useState(false);
   const [selectedPsych, setSelectedPsych] = useState<Psychologist | null>(null);
 
+  const { user } = useAuth();
+
+  console.log("User in Psychologists:", user);
+
   const loadPsychologists = async () => {
-    const data = await getAllPsychologists();
+    const data = await getAllPsychologists(user?.token || "");
     setPsychologists(data);
   };
 
   useEffect(() => {
+    if (!user || !user.token) return;
     loadPsychologists();
-  }, []);
+  }, [user]);
 
   const handleCreate = () => {
     setSelectedPsych(null);
