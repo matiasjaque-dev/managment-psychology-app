@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { User } from "../types/user";
 import { jwtDecode } from "jwt-decode";
+import { Navigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -44,8 +45,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
+    console.log("llega al logout");
     localStorage.removeItem("user");
     setUser(null);
+    <Navigate to="/" />;
   };
 
   return (
