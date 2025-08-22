@@ -25,7 +25,9 @@ function App() {
             path="/admin/psychs"
             element={
               <PrivateRoute requiredRole="admin">
-                <AdminPsychsPage />
+                <Layout>
+                  <AdminPsychsPage />
+                </Layout>
               </PrivateRoute>
             }
           />

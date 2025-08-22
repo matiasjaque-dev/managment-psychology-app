@@ -1,6 +1,6 @@
 // src/components/Layout/Layout.tsx
 import Sidebar from "./Sidebar";
-import Topbar from "./TopBar";
+import Topbar from "./Topbar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -2,7 +2,10 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 // logica
-import { getAllPsychologists } from "../../services/psychologistService.ts";
+import {
+  getAllPsychologists,
+  deletePsychologist,
+} from "../../services/psychologistService.ts";
 import type { Psychologist } from "../../types/psychologist.ts";
 // componentes
 import PsychologistTable from "../../components/psychologists/PsychologistTable.tsx";
@@ -20,7 +23,7 @@ const Psychologists = () => {
 
   const loadPsychologists = async () => {
     const data = await getAllPsychologists(user?.token || "");
-    setPsychologists(data);
+    setPsychologists(data.filter((psych: Psychologist) => psych.isActive));
   };
 
   useEffect(() => {
@@ -46,6 +49,13 @@ const Psychologists = () => {
         onEdit={(psych: Psychologist) => {
           setSelectedPsych(psych);
           setOpenForm(true);
+        }}
+        onDelete={async (id: string) => {
+          console.log("Delete psychologist with id:", id);
+          const resp = await deletePsychologist(id, user?.token || "");
+          await loadPsychologists();
+          console.log(resp);
+          // Aquí deberías implementar la lógica para eliminar un psicólogo
         }}
         reload={loadPsychologists}
       />

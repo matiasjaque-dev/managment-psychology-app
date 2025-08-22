@@ -7,15 +7,17 @@ import {
   IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import type { Psychologist } from "../../types/psychologist";
 
 interface Props {
   data: Psychologist[];
   onEdit: (psychologist: Psychologist) => void;
+  onDelete: (id: string) => void;
   reload: () => Promise<void>;
 }
 
-const PsychologistTable: React.FC<Props> = ({ data, onEdit }) => {
+const PsychologistTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
   return (
     <Table>
       <TableHead>
@@ -35,6 +37,9 @@ const PsychologistTable: React.FC<Props> = ({ data, onEdit }) => {
             <TableCell>
               <IconButton onClick={() => onEdit(psych)}>
                 <EditIcon />
+              </IconButton>
+              <IconButton onClick={() => onDelete(psych._id || "")}>
+                <DeleteIcon />
               </IconButton>
             </TableCell>
           </TableRow>
