@@ -16,7 +16,7 @@ const Login = () => {
       const response = await loginUser(email, password);
       login({ ...response.user, token: response.token });
       navigate(
-        response.user.role === "admin" ? "/admin/psychs" : "/psychologist"
+        response.user.role === "admin" ? "/admin/psychs" : "/admin/patients"
       );
     } catch (error) {
       console.error("Error al iniciar sesión:", error);

@@ -1,6 +1,7 @@
 import { Psychologist } from "../models/psychologist.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Patient } from "../models/Patient.model.js";
 
 export const login = async (req, res) => {
   try {
@@ -8,36 +9,41 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await Psychologist.findOne({ email });
-    if (!user || !user.isActive) {
-      return res
-        .status(404)
-        .json({ message: "Usuario no encontrado o inactivo" });
+
+    const patient = await Patient.findOne({ email });
+
+    console.log("Found user:", user);
+    console.log("Found patient:", patient);
+    if (!user && !patient) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+    if (user && !user.isActive) {
+      return res.status(403).json({ message: "Cuenta de psicólogo inactiva" });
+    }
+    if (patient && !patient.isActive) {
+      return res.status(403).json({ message: "Cuenta de paciente inactiva" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const account = user || patient;
+
+    const isMatch = await bcrypt.compare(password, account.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
     const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-        name: user.name,
-      },
+      { id: account._id, role: account.role, name: account.name },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
-    console.log("Token:", token);
-    console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
 
     res.status(200).json({
       token,
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        id: account._id,
+        role: account.role,
+        name: account.name,
+        email: account.email,
       },
     });
   } catch (error) {

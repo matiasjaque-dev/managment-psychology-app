@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
-  requiredRole: "admin" | "psychologist";
+  requiredRole: "admin" | "psychologist" | "patient";
 }
 const PrivateRoute = ({ children, requiredRole }: Props) => {
   const { user } = useAuth();

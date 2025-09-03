@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminPsychsPage from "./pages/admin/Psychologists";
+import AdminPatientsPage from "./pages/admin/Patients";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
@@ -27,6 +28,16 @@ function App() {
               <PrivateRoute requiredRole="admin">
                 <Layout>
                   <AdminPsychsPage />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/patients"
+            element={
+              <PrivateRoute requiredRole="patient">
+                <Layout>
+                  <AdminPatientsPage />
                 </Layout>
               </PrivateRoute>
             }

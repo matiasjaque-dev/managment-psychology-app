@@ -6,66 +6,62 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import {
-  createPsychologist,
-  updatePsychologist,
-} from "../../services/psychologistService";
 import React, { useEffect, useState } from "react";
-import type { Psychologist } from "../../types/psychologist";
-import { initPsychologistForm } from "../../constants/forms";
+import { initPatientForm } from "../../constants/forms";
+import type { Patient } from "../../types/Patient";
+import { createPatient, updatePatient } from "../../services/patientService";
 import { useAuth } from "../../context/AuthContext";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  psychologist: Psychologist | null;
+  patient: Patient | null;
   reload: () => Promise<void>;
 }
 
-const PsychologistFormDialog: React.FC<Props> = ({
+const PatientFormDialog: React.FC<Props> = ({
   open,
   onClose,
-  psychologist,
+  patient,
   reload,
 }) => {
-  const [form, setForm] = useState(initPsychologistForm);
+  const [form, setForm] = useState(initPatientForm);
 
   const { user } = useAuth();
 
   useEffect(() => {
-    if (psychologist) {
+    if (patient) {
       setForm({
-        name: psychologist.name,
-        email: psychologist.email,
-        specialty: psychologist.specialty ?? "",
-        password: psychologist.password ?? "",
-        rut: psychologist.rut ?? "",
-        phone: psychologist.phone ?? "",
-        gender: psychologist.gender ?? "",
-        address: psychologist.address ?? "",
+        name: patient.name,
+        email: patient.email,
+        password: patient.password ?? "",
+        rut: patient.rut ?? "",
+        phone: patient.phone ?? "",
+        gender: patient.gender ?? "",
+        address: patient.address ?? "",
       });
     } else {
-      setForm(initPsychologistForm);
+      setForm(initPatientForm);
     }
-  }, [psychologist]);
+  }, [patient]);
 
   const handleSubmit = async () => {
-    if (psychologist) {
-      await updatePsychologist(psychologist._id || "", form, user?.token || "");
+    if (patient) {
+      await updatePatient(patient._id || "", form, user?.token || "");
     } else {
-      await createPsychologist(form, user?.token || "");
+      await createPatient(form, user?.token || "");
     }
-    setForm(initPsychologistForm);
+    setForm(initPatientForm);
     reload();
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>{psychologist ? "Editar" : "Crear"} Psicólogo</DialogTitle>
+      <DialogTitle>{patient ? "Editar" : "Crear"} Paciente</DialogTitle>
       <form
         onSubmit={(e) => {
-          e.preventDefault(); // evita recargar
+          e.preventDefault();
           handleSubmit();
         }}
       >
@@ -112,13 +108,6 @@ const PsychologistFormDialog: React.FC<Props> = ({
           />
           <TextField
             margin="dense"
-            label="Especialidad"
-            fullWidth
-            value={form.specialty}
-            onChange={(e) => setForm({ ...form, specialty: e.target.value })}
-          />
-          <TextField
-            margin="dense"
             label="Género"
             fullWidth
             value={form.gender}
@@ -143,4 +132,4 @@ const PsychologistFormDialog: React.FC<Props> = ({
   );
 };
 
-export default PsychologistFormDialog;
+export default PatientFormDialog;

@@ -26,6 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
+    console.log("savedUser", savedUser);
     if (savedUser) {
       const parsed = JSON.parse(savedUser);
       const decoded: DecodedToken = jwtDecode(parsed.token);
