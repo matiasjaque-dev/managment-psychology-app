@@ -1,31 +1,29 @@
+// src/components/Layout/Topbar.tsx
+import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
 
 const Topbar = () => {
   const { user, logout } = useAuth();
 
-  console.log("User in Topbar:", user);
-
   return (
-    <header style={{ background: "#1976d2", padding: 10, color: "#fff" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>Bienvenido, {user?.name}</span>
-        <button
-          onClick={() => {
-            console.log("Logging out...");
-
-            logout();
-          }}
-          style={{
-            background: "#fff",
-            color: "#1976d2",
-            border: "none",
-            padding: "5px 10px",
-          }}
-        >
-          Cerrar sesión
-        </button>
-      </div>
-    </header>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          Bienvenido, {user?.name}
+        </Typography>
+        <Box>
+          <Button
+            color="inherit"
+            onClick={() => {
+              console.log("Logging out...");
+              logout();
+            }}
+          >
+            Cerrar sesión
+          </Button>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 

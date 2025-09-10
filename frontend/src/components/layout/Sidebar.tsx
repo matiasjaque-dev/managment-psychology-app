@@ -1,3 +1,5 @@
+// src/components/Layout/Sidebar.tsx
+import { Box, List, ListItem, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -5,22 +7,31 @@ const Sidebar = () => {
   const { user } = useAuth();
 
   return (
-    <aside style={{ width: 200, background: "#f0f0f0", padding: 20 }}>
+    <Box
+      component="aside"
+      sx={{
+        width: 120,
+        bgcolor: "grey.100",
+        p: 2,
+        borderRight: 1,
+        borderColor: "divider",
+      }}
+    >
       <nav>
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <List>
           {user?.role === "admin" && (
-            <li>
-              <Link to="/admin/psychs">Gestionar Psicólogos</Link>
-            </li>
+            <ListItem button component={Link} to="/admin/psychs">
+              <ListItemText primary="Gestionar Psicólogos" />
+            </ListItem>
           )}
           {user?.role === "psychologist" && (
-            <li>
-              <Link to="/psychologist">Vista Psicólogo</Link>
-            </li>
+            <ListItem button component={Link} to="/psychologist">
+              <ListItemText primary="Vista Psicólogo" />
+            </ListItem>
           )}
-        </ul>
+        </List>
       </nav>
-    </aside>
+    </Box>
   );
 };
 
