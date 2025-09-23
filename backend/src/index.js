@@ -1,32 +1,17 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
 import dotenv from "dotenv";
-
-import psychologistRoutes from "./routes/psychologist.routes.js";
-import patientRoutes from "./routes/patient.routes.js";
-import SessionRoutes from "./routes/Session.routes.js";
-import authRoutes from "./routes/auth.routes.js";
+import mongoose from "mongoose";
+import app from "./app.js";
 
 dotenv.config();
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
 const PORT = process.env.PORT || 4000;
-
-// Rutas
-app.use("/api/psychologists", psychologistRoutes);
-app.use("/api/patients", patientRoutes);
-app.use("/api/sessions", SessionRoutes);
-app.use("/api/auth", authRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB conectado"))
+  .then(() => {
+    console.log("✅ MongoDB conectado");
+    app.listen(PORT, () =>
+      console.log(`🚀 Servidor corriendo en puerto ${PORT}`)
+    );
+  })
   .catch((err) => console.error("❌ Error al conectar a MongoDB", err));
-
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-});

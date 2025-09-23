@@ -19,7 +19,7 @@ export const getAllSessions = async (req, res) => {
     const sessions = await Session.find()
       .populate("patientId", "name email")
       .populate("psychologistId", "name email");
-    res.json(sessions);
+    res.status(200).json(sessions);
   } catch (err) {
     console.error("❌ Error en GET /api/sessions:", err);
     res.status(500).json({ error: err.message });
@@ -33,7 +33,7 @@ export const getSessionById = async (req, res) => {
       .populate("patientId", "name email")
       .populate("psychologistId", "name email");
     if (!session) return res.status(404).json({ error: "Not found" });
-    res.json(session);
+    res.status(200).json(session);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -47,7 +47,7 @@ export const updateSession = async (req, res) => {
       new: true,
     });
     if (!updated) return res.status(404).json({ error: "Not found" });
-    res.json(updated);
+    res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -62,7 +62,7 @@ export const deleteSession = async (req, res) => {
       { new: true }
     );
     if (!updated) return res.status(404).json({ error: "Not found" });
-    res.json(updated);
+    res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

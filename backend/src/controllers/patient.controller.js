@@ -23,7 +23,7 @@ export const createPatient = async (req, res) => {
 export const getAllPatients = async (req, res) => {
   try {
     const patients = await Patient.find();
-    res.json(patients);
+    res.status(200).json(patients);
   } catch (err) {
     console.error("❌ Error en GET /api/patients:", err);
     res.status(500).json({ error: err.message });
@@ -35,7 +35,7 @@ export const getPatientById = async (req, res) => {
   try {
     const patient = await Patient.findById(req.params.id);
     if (!patient) return res.status(404).json({ error: "Not found" });
-    res.json(patient);
+    res.status(200).json(patient);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -56,7 +56,7 @@ export const updatePatient = async (req, res) => {
     const updated = await Patient.findByIdAndUpdate(id, rest, { new: true });
     if (!updated) return res.status(404).json({ error: "Not found" });
 
-    res.json(updated);
+    res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -72,7 +72,7 @@ export const deletePatient = async (req, res) => {
     );
     if (!updated) return res.status(404).json({ error: "Not found" });
 
-    res.json(updated);
+    res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

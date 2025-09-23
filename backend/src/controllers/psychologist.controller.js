@@ -24,7 +24,7 @@ export const getAllPsychologists = async (req, res) => {
   try {
     const psychs = await Psychologist.find();
 
-    res.json(psychs);
+    res.status(200).json(psychs);
   } catch (err) {
     console.error("❌ Error en GET /api/psychologists:", err);
     res.status(500).json({ error: err.message });
@@ -58,7 +58,7 @@ export const updatePsychologist = async (req, res) => {
     });
     if (!updated) return res.status(404).json({ error: "Not found" });
 
-    res.json(updated);
+    res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -74,7 +74,7 @@ export const deletePsychologist = async (req, res) => {
     );
     if (!updated) return res.status(404).json({ error: "Not found" });
 
-    res.json(updated);
+    res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

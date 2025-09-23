@@ -1,6 +1,7 @@
 import { Psychologist } from "../models/psychologist.model.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
+
 import { Patient } from "../models/Patient.model.js";
 
 export const login = async (req, res) => {
@@ -47,6 +48,8 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Error en login:", error);
+
     return res
       .status(500)
       .json({ message: "Error al iniciar sesión", error: error.message });
