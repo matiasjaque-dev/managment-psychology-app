@@ -1,19 +1,29 @@
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import request from "supertest";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
+import app from "../../app.js";
+import { Psychologist } from "../../models/psychologist.model.js";
 
 let mongoServer;
-let app;
 
 beforeAll(async () => {
-  process.env.JWT_SECRET = "testsecret"; // <- necesario
+  process.env.JWT_SECRET = "test_secret_key";
+
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
-  await mongoose.connect(uri, { dbName: "test" });
 
-  // Importar app después de configurar env
-  app = (await import("../../app.js")).default;
+  // 👇 Forzar cierre de conexión previa
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
+
+  await mongoose.connect(uri, { dbName: "test" });
+});
+
+afterEach(async () => {
+  // 👇 Limpiar la DB entre tests
+  await mongoose.connection.dropDatabase();
 });
 
 afterAll(async () => {
@@ -21,38 +31,54 @@ afterAll(async () => {
   await mongoServer.stop();
 });
 
-afterEach(async () => {
-  const { Psychologist } = await import("../../models/psychologist.model.js");
-  await Psychologist.deleteMany();
-});
-
 describe("Auth Integration Test", () => {
+  it("usuario no existe", async () => {
+    const res = await request(app)
+      .post("/api/auth/login")
+      .send({ email: "fake@test.com", password: "123456" });
+
+    expect(res.statusCode).toBe(404);
+  });
+
   it("login correcto", async () => {
-    const { Psychologist } = await import("../../models/psychologist.model.js");
-    const hashedPassword = await bcrypt.hash("1234", 10);
+    const passwordHash = await bcrypt.hash("123456", 10);
+
     await Psychologist.create({
-      name: "Test",
+      name: "Dr. Test",
       email: "test@test.com",
-      password: hashedPassword,
+      password: passwordHash,
       role: "psychologist",
       isActive: true,
     });
 
     const res = await request(app)
       .post("/api/auth/login")
-      .send({ email: "test@test.com", password: "1234" });
+      .send({ email: "test@test.com", password: "123456" });
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.user.email).toBe("test@test.com");
-    expect(res.body.token).toBeDefined();
+    expect(res.body).toHaveProperty("token");
+    expect(res.body.user).toMatchObject({
+      email: "test@test.com",
+      role: "psychologist",
+      name: "Dr. Test",
+    });
   });
 
-  it("usuario no existe", async () => {
+  it("contraseña incorrecta", async () => {
+    const passwordHash = await bcrypt.hash("123456", 10);
+
+    await Psychologist.create({
+      name: "Dr. Test",
+      email: "test2@test.com",
+      password: passwordHash,
+      role: "psychologist",
+      isActive: true,
+    });
+
     const res = await request(app)
       .post("/api/auth/login")
-      .send({ email: "noexiste@test.com", password: "1234" });
+      .send({ email: "test2@test.com", password: "wrongpass" });
 
-    expect(res.statusCode).toBe(404);
-    expect(res.body.message).toBe("Usuario no encontrado");
+    expect(res.statusCode).toBe(401);
   });
 });

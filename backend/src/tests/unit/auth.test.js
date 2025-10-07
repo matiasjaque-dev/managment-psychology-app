@@ -26,7 +26,7 @@ jest.unstable_mockModule("bcrypt", () => ({
 }));
 
 jest.unstable_mockModule("jsonwebtoken", () => ({
-  sign: mockJwtSign,
+  default: { sign: mockJwtSign },
 }));
 
 // Importamos el controller de manera dinámica

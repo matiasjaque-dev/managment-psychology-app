@@ -1,6 +1,6 @@
 import { Psychologist } from "../models/psychologist.model.js";
 import * as bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import { Patient } from "../models/Patient.model.js";
 

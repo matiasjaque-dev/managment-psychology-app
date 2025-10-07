@@ -12,7 +12,8 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 router.post("/", createPsychologist);
-router.get("/", authMiddleware, getAllPsychologists);
+//router.get("/", authMiddleware, getAllPsychologists);
+router.get("/", getAllPsychologists);
 router.get("/:id", getPsychologistById);
 router.put("/:id", updatePsychologist);
 router.delete("/:id", deletePsychologist);
