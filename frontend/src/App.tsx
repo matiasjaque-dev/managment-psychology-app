@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import Layout from "./components/layout/Layout";
+import PatientEntry from "./components/patients/PatientEntry";
 
 function App() {
   return (
@@ -42,7 +43,8 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* Agrega tus otras rutas aquí */}
+          // route patient entry
+          <Route path="/patient-entry" element={<PatientEntry />} />
         </Routes>
       </Router>
     </AuthProvider>

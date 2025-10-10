@@ -22,7 +22,7 @@ const Psychologists = () => {
   console.log("User in Psychologists:", user);
 
   const loadPsychologists = async () => {
-    const data = await getAllPsychologists(user?.token || "");
+    const data = await getAllPsychologists();
     setPsychologists(data.filter((psych: Psychologist) => psych.isActive));
   };
 

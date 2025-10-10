@@ -12,9 +12,9 @@ const getAuthHeader = (token: string) => ({
 });
 
 // Función usando token y try/catch
-export const getAllPsychologists = async (token: string) => {
+export const getAllPsychologists = async () => {
   try {
-    const res = await axios.get(API, getAuthHeader(token));
+    const res = await axios.get(API);
     return res.data;
   } catch (error: any) {
     console.error(

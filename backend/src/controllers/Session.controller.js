@@ -16,9 +16,10 @@ export const createSession = async (req, res) => {
 // READ ALL
 export const getAllSessions = async (req, res) => {
   try {
-    const sessions = await Session.find()
-      .populate("patientId", "name email")
-      .populate("psychologistId", "name email");
+    const sessions = await Session.find().populate(
+      "psychologistId",
+      "name email"
+    );
     res.status(200).json(sessions);
   } catch (err) {
     console.error("❌ Error en GET /api/sessions:", err);

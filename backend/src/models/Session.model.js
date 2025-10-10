@@ -2,11 +2,8 @@ import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema(
   {
-    patientId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "patient",
-      required: true,
-    },
+    patientName: { type: String, required: true },
+    patientEmail: { type: String, required: true },
     psychologistId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "psychologist",

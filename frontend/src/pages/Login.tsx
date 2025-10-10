@@ -25,7 +25,7 @@ const Login = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" mt={2} gutterBottom>
         Login
       </Typography>
       <form onSubmit={handleSubmit}>
@@ -46,6 +46,15 @@ const Login = () => {
         />
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Iniciar Sesión
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={() => navigate("/patient-entry")}
+        >
+          Entrar como Paciente
         </Button>
       </form>
     </Container>
