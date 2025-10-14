@@ -12,7 +12,7 @@ import PsychologistTable from "../components/admin/PsychologistTable.tsx";
 import PsychologistFormDialog from "../components/admin/PsychologistFormDialog.tsx";
 import { useAuth } from "../context/AuthContext.tsx";
 
-const Psychologists = () => {
+const Admin = () => {
   const [psychologists, setPsychologists] = useState<Psychologist[]>([]);
   const [openForm, setOpenForm] = useState(false);
   const [selectedPsych, setSelectedPsych] = useState<Psychologist | null>(null);
@@ -70,4 +70,4 @@ const Psychologists = () => {
   );
 };
 
-export default Psychologists;
+export default Admin;
