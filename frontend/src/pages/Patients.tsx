@@ -2,16 +2,13 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 // logica
-import {
-  deletePatient,
-  getAllPatients,
-} from "../../services/patientService.ts";
-import type { Patient } from "../../types/Patient.ts";
+import { deletePatient, getAllPatients } from "../services/patientService.ts";
+import type { Patient } from "../types/Patient.ts";
 
 // componentes
-import { useAuth } from "../../context/AuthContext.tsx";
-import PatientTable from "../../components/patients/PatientTable.tsx";
-import PatientFormDialog from "../../components/patients/PatientFormDialog.tsx";
+import { useAuth } from "../context/AuthContext.tsx";
+import PatientTable from "../components/patients/PatientTable.tsx";
+import PatientFormDialog from "../components/patients/PatientFormDialog.tsx";
 
 const Patients = () => {
   const [patients, setPatients] = useState<Patient[]>([]);

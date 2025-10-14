@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import {
   getAllPsychologists,
   deletePsychologist,
-} from "../../services/psychologistService.ts";
-import type { Psychologist } from "../../types/psychologist.ts";
+} from "../services/psychologistService.ts";
+import type { Psychologist } from "../types/psychologist.ts";
 // componentes
-import PsychologistTable from "../../components/psychologists/PsychologistTable.tsx";
-import PsychologistFormDialog from "../../components/psychologists/PsychologistFormDialog.tsx";
-import { useAuth } from "../../context/AuthContext.tsx";
+import PsychologistTable from "../components/admin/PsychologistTable.tsx";
+import PsychologistFormDialog from "../components/admin/PsychologistFormDialog.tsx";
+import { useAuth } from "../context/AuthContext.tsx";
 
 const Psychologists = () => {
   const [psychologists, setPsychologists] = useState<Psychologist[]>([]);
