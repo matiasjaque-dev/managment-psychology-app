@@ -38,11 +38,19 @@ const Admin = () => {
   const loadPsychologists = async () => {
     try {
       setError(null);
-      const data = await getAllPsychologists();
+      if (!user?.token) {
+        setError('No hay token de autenticación disponible.');
+        return;
+      }
+      const data = await getAllPsychologists(user.token);
       // Filtrar solo psicólogos activos
       setPsychologists(data.filter((psych: Psychologist) => psych.isActive));
-    } catch (err) {
-      setError('Error al cargar los psicólogos. Por favor, intenta nuevamente.');
+    } catch (err: any) {
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        setError('No tienes permisos para acceder a esta información.');
+      } else {
+        setError('Error al cargar los psicólogos. Por favor, intenta nuevamente.');
+      }
     }
   };
 

@@ -27,7 +27,7 @@ function App() {
           <Route
             path="/admin/patients"
             element={
-              <PrivateRoute requiredRole="patient">
+              <PrivateRoute requiredRole="psychologist">
                 <Layout>
                   <AdminPatientsPage />
                 </Layout>

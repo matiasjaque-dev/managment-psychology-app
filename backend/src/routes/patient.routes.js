@@ -6,13 +6,15 @@ import {
   updatePatient,
   deletePatient,
 } from "../controllers/patient.controller.js";
+import { authMiddleware, checkRole } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", createPatient);
-router.get("/", getAllPatients);
-router.get("/:id", getPatientById);
-router.put("/:id", updatePatient);
-router.delete("/:id", deletePatient);
+// Todas las rutas de pacientes requieren autenticación y rol psychologist
+router.post("/", authMiddleware, checkRole(["psychologist"]), createPatient);
+router.get("/", authMiddleware, checkRole(["psychologist"]), getAllPatients);
+router.get("/:id", authMiddleware, checkRole(["psychologist"]), getPatientById);
+router.put("/:id", authMiddleware, checkRole(["psychologist"]), updatePatient);
+router.delete("/:id", authMiddleware, checkRole(["psychologist"]), deletePatient);
 
 export default router;

@@ -7,7 +7,6 @@ import { Admin } from "../models/Admin.model.js";
 
 export const login = async (req, res) => {
   try {
-    console.log("Login attempt with body:", req.body);
     const { email, password } = req.body;
 
     if (email === "admin@admin.com") {
@@ -33,11 +32,8 @@ export const login = async (req, res) => {
     }
 
     const user = await Psychologist.findOne({ email });
-
     const patient = await Patient.findOne({ email });
 
-    console.log("Found user:", user);
-    console.log("Found patient:", patient);
     if (!user && !patient) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }

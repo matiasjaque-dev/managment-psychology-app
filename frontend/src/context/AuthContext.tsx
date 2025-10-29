@@ -26,7 +26,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
-    console.log("savedUser", savedUser);
     if (savedUser) {
       const parsed = JSON.parse(savedUser);
       const decoded: DecodedToken = jwtDecode(parsed.token);
@@ -46,7 +45,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
-    console.log("llega al logout");
     localStorage.removeItem("user");
     setUser(null);
     <Navigate to="/" />;

@@ -28,7 +28,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
 
-import { getAllPsychologists } from "../../services/psychologistService";
+import { getPublicPsychologists } from "../../services/psychologistService";
 import type { Psychologist } from "../../types/psychologist";
 import { createSession } from "../../services/sessionService";
 
@@ -51,7 +51,7 @@ const PatientEntry = () => {
     const fetchPsychologists = async () => {
       try {
         setError(null);
-        const data = await getAllPsychologists();
+        const data = await getPublicPsychologists();
         setPsychologists(data.filter((psych: Psychologist) => psych.isActive));
       } catch (error) {
         setError("Error al cargar los psicólogos disponibles");

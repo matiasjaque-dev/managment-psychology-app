@@ -22,7 +22,6 @@ export const getAllSessions = async (req, res) => {
     );
     res.status(200).json(sessions);
   } catch (err) {
-    console.error("❌ Error en GET /api/sessions:", err);
     res.status(500).json({ error: err.message });
   }
 };

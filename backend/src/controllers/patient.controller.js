@@ -25,7 +25,6 @@ export const getAllPatients = async (req, res) => {
     const patients = await Patient.find();
     res.status(200).json(patients);
   } catch (err) {
-    console.error("❌ Error en GET /api/patients:", err);
     res.status(500).json({ error: err.message });
   }
 };

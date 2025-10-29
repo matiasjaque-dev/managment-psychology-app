@@ -21,6 +21,16 @@ export const getAllPatients = async (token: string) => {
   }
 };
 
+export const getPatientById = async (id: string, token: string) => {
+  try {
+    const res = await axios.get(`${API}/${id}`, getAuthHeader(token));
+    return res.data;
+  } catch (error: any) {
+    console.error("Error al obtener paciente:", error.response?.data || error);
+    throw error;
+  }
+};
+
 // Las otras también deberían recibir `token` y usar `getAuthHeader(token)`
 
 export const createPatient = async (data: Patient, token: string) => {

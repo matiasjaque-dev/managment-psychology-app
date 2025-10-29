@@ -23,10 +23,8 @@ export const createPsychologist = async (req, res) => {
 export const getAllPsychologists = async (req, res) => {
   try {
     const psychs = await Psychologist.find();
-
     res.status(200).json(psychs);
   } catch (err) {
-    console.error("❌ Error en GET /api/psychologists:", err);
     res.status(500).json({ error: err.message });
   }
 };

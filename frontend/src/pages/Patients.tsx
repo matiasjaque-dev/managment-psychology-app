@@ -34,10 +34,18 @@ const Patients = () => {
   const loadPatients = async () => {
     try {
       setError(null);
-      const data = await getAllPatients(user?.token || "");
+      if (!user?.token) {
+        setError('No hay token de autenticación disponible.');
+        return;
+      }
+      const data = await getAllPatients(user.token);
       setPatients(data.filter((patient: Patient) => patient.isActive));
-    } catch (err) {
-      setError("Error al cargar los pacientes");
+    } catch (err: any) {
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        setError('No tienes permisos para acceder a esta información.');
+      } else {
+        setError("Error al cargar los pacientes. Por favor, intenta nuevamente.");
+      }
       console.error("Error loading patients:", err);
     }
   };

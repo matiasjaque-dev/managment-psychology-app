@@ -12,13 +12,40 @@ const getAuthHeader = (token: string) => ({
 });
 
 // Función usando token y try/catch
-export const getAllPsychologists = async () => {
+export const getAllPsychologists = async (token: string) => {
   try {
-    const res = await axios.get(API);
+    const res = await axios.get(API, getAuthHeader(token));
     return res.data;
   } catch (error: any) {
     console.error(
       "Error al obtener psicólogos:",
+      error.response?.data || error
+    );
+    throw error;
+  }
+};
+
+// Función pública para pacientes (no requiere token)
+export const getPublicPsychologists = async () => {
+  try {
+    const res = await axios.get(`${API}/public`);
+    return res.data;
+  } catch (error: any) {
+    console.error(
+      "Error al obtener psicólogos públicos:",
+      error.response?.data || error
+    );
+    throw error;
+  }
+};
+
+export const getPsychologistById = async (id: string, token: string) => {
+  try {
+    const res = await axios.get(`${API}/${id}`, getAuthHeader(token));
+    return res.data;
+  } catch (error: any) {
+    console.error(
+      "Error al obtener psicólogo:",
       error.response?.data || error
     );
     throw error;
