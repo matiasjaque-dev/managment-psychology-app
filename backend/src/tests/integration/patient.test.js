@@ -4,8 +4,10 @@ import request from "supertest";
 import bcrypt from "bcrypt";
 import app from "../../app.js";
 import { Patient } from "../../models/Patient.model.js";
+import { generateToken, getAuthHeader } from "../setup.js";
 
 let mongoServer;
+let psychologistToken;
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
@@ -17,6 +19,13 @@ beforeAll(async () => {
   }
 
   await mongoose.connect(uri, { dbName: "test" });
+
+  // Generar token de psicólogo para las pruebas
+  psychologistToken = generateToken({
+    id: "psych123",
+    role: "psychologist",
+    name: "Test Psychologist",
+  });
 });
 
 afterEach(async () => {
@@ -31,11 +40,14 @@ afterAll(async () => {
 
 describe("Patients Integration Test", () => {
   it("✅ crea un nuevo paciente", async () => {
-    const res = await request(app).post("/api/patients").send({
-      name: "Test Patient",
-      email: "patient@test.com",
-      password: "123456",
-    });
+    const res = await request(app)
+      .post("/api/patients")
+      .set(getAuthHeader(psychologistToken))
+      .send({
+        name: "Test Patient",
+        email: "patient@test.com",
+        password: "123456",
+      });
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("message", "Patient created successfully");
@@ -51,11 +63,17 @@ describe("Patients Integration Test", () => {
       { name: "P2", email: "p2@test.com", password: "456" },
     ]);
 
-    const res = await request(app).get("/api/patients");
+    const res = await request(app)
+      .get("/api/patients")
+      .set(getAuthHeader(psychologistToken));
 
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBe(2);
-    expect(res.body[0]).toHaveProperty("name", "P1");
+
+    // Verificar que ambos pacientes están presentes sin importar el orden
+    const names = res.body.map((p) => p.name);
+    expect(names).toContain("P1");
+    expect(names).toContain("P2");
   });
 
   it("✅ obtiene un paciente por id", async () => {
@@ -65,7 +83,9 @@ describe("Patients Integration Test", () => {
       password: "abc",
     });
 
-    const res = await request(app).get(`/api/patients/${patient._id}`);
+    const res = await request(app)
+      .get(`/api/patients/${patient._id}`)
+      .set(getAuthHeader(psychologistToken));
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("name", "Unique");
@@ -80,6 +100,7 @@ describe("Patients Integration Test", () => {
 
     const res = await request(app)
       .put(`/api/patients/${patient._id}`)
+      .set(getAuthHeader(psychologistToken))
       .send({ name: "New Name", password: "newpass" });
 
     expect(res.statusCode).toBe(200);
@@ -97,7 +118,9 @@ describe("Patients Integration Test", () => {
       isActive: true,
     });
 
-    const res = await request(app).delete(`/api/patients/${patient._id}`);
+    const res = await request(app)
+      .delete(`/api/patients/${patient._id}`)
+      .set(getAuthHeader(psychologistToken));
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("isActive", false);

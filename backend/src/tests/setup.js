@@ -2,8 +2,25 @@
 import { jest } from "@jest/globals";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+
+// Configurar variables de entorno para tests
+process.env.JWT_SECRET = "test_secret_key_for_testing";
+process.env.NODE_ENV = "test";
 
 let mongoServer;
+
+// Helper functions para tests
+export const generateToken = (userData) => {
+  const { id = "123", role = "admin", name = "Test User" } = userData;
+  return jwt.sign({ id, role, name }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
+};
+
+export const getAuthHeader = (token) => ({
+  Authorization: `Bearer ${token}`,
+});
 
 // Configuración global para todos los tests
 beforeAll(async () => {

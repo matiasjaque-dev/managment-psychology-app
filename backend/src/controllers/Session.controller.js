@@ -29,9 +29,10 @@ export const getAllSessions = async (req, res) => {
 // READ ONE
 export const getSessionById = async (req, res) => {
   try {
-    const session = await Session.findById(req.params.id)
-      .populate("patientId", "name email")
-      .populate("psychologistId", "name email");
+    const session = await Session.findById(req.params.id).populate(
+      "psychologistId",
+      "name email"
+    );
     if (!session) return res.status(404).json({ error: "Not found" });
     res.status(200).json(session);
   } catch (err) {

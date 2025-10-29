@@ -29,7 +29,8 @@ afterEach(async () => {
 describe("Session Integration Tests", () => {
   it("debería crear una sesión (POST /api/sessions)", async () => {
     const newSession = {
-      patientId: new mongoose.Types.ObjectId(),
+      patientName: "Juan Pérez",
+      patientEmail: "juan@test.com",
       psychologistId: new mongoose.Types.ObjectId(),
       scheduledStart: "2025-01-01T09:00:00Z",
       price: 20000,
@@ -50,13 +51,15 @@ describe("Session Integration Tests", () => {
   it("debería obtener todas las sesiones (GET /api/sessions)", async () => {
     await Session.create([
       {
-        patientId: new mongoose.Types.ObjectId(),
+        patientName: "Test Patient 1",
+        patientEmail: "patient1@test.com",
         psychologistId: new mongoose.Types.ObjectId(),
         scheduledStart: "2025-01-01T09:00:00Z",
         price: 20000,
       },
       {
-        patientId: new mongoose.Types.ObjectId(),
+        patientName: "Test Patient 2",
+        patientEmail: "patient2@test.com",
         psychologistId: new mongoose.Types.ObjectId(),
         scheduledStart: "2025-01-02T09:00:00Z",
         price: 25000,
@@ -72,7 +75,8 @@ describe("Session Integration Tests", () => {
 
   it("debería obtener una sesión por ID (GET /api/sessions/:id)", async () => {
     const session = await Session.create({
-      patientId: new mongoose.Types.ObjectId(),
+      patientName: "Test Find Patient",
+      patientEmail: "find@test.com",
       psychologistId: new mongoose.Types.ObjectId(),
       scheduledStart: "2025-02-01T09:00:00Z",
       price: 30000,
@@ -87,7 +91,8 @@ describe("Session Integration Tests", () => {
 
   it("debería actualizar una sesión (PUT /api/sessions/:id)", async () => {
     const session = await Session.create({
-      patientId: new mongoose.Types.ObjectId(),
+      patientName: "Test Update Patient",
+      patientEmail: "update@test.com",
       psychologistId: new mongoose.Types.ObjectId(),
       scheduledStart: "2025-03-01T09:00:00Z",
       price: 35000,
@@ -108,7 +113,8 @@ describe("Session Integration Tests", () => {
 
   it("debería hacer soft delete de una sesión (DELETE /api/sessions/:id)", async () => {
     const session = await Session.create({
-      patientId: new mongoose.Types.ObjectId(),
+      patientName: "Test Delete Patient",
+      patientEmail: "delete@test.com",
       psychologistId: new mongoose.Types.ObjectId(),
       scheduledStart: "2025-04-01T09:00:00Z",
       price: 40000,

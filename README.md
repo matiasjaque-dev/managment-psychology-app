@@ -5,6 +5,7 @@ Una aplicación web completa para la gestión de consultas psicológicas, diseñ
 ## 📋 Tabla de Contenidos
 
 - [Características](#-características)
+- [Sistema de Roles](#-sistema-de-roles)
 - [Tecnologías](#️-tecnologías)
 - [Capturas de Pantalla](#-capturas-de-pantalla)
 - [Instalación](#-instalación)
@@ -20,23 +21,33 @@ Una aplicación web completa para la gestión de consultas psicológicas, diseñ
 
 ### 🔐 Autenticación y Autorización
 
-- Sistema de login seguro con JWT
-- Roles diferenciados (Administrador, Psicólogo, Paciente)
-- Rutas protegidas según el rol del usuario
+- **Sistema de login seguro** con JWT y verificación de tokens
+- **Control de acceso basado en roles** (RBAC) implementado
+- **3 niveles de usuarios:**
+  - **👑 Administrador**: Gestión completa de psicólogos
+  - **👨‍⚕️ Psicólogo**: Gestión completa de pacientes y sesiones
+  - **👤 Paciente**: Agendamiento público sin registro
+- **Rutas protegidas** con middleware de autorización
+- **Headers Authorization** en todas las peticiones autenticadas
+- **Manejo de errores** 401/403 con mensajes descriptivos
+- **Endpoint público** para lista básica de psicólogos
 
 ### 👨‍⚕️ Gestión de Psicólogos
 
-- CRUD completo de psicólogos
-- Especialidades configurables
-- Vista responsive (tabla en desktop, cards en mobile)
-- Botones de acción integrados y tooltips
+- **CRUD completo** de psicólogos (solo admin)
+- **Especialidades configurables** con validación
+- **Vista responsive** (tabla en desktop, cards en mobile)
+- **Botones de acción integrados** y tooltips
+- **Endpoint público** para agendamiento de pacientes
+- **Autenticación requerida** para operaciones administrativas
 
 ### 👥 Gestión de Pacientes
 
-- Registro y administración de pacientes
-- Historial clínico
-- Asignación a psicólogos
-- **Formulario de agendamiento autónomo** para pacientes
+- **CRUD completo** de pacientes (solo psicólogos autenticados)
+- **Historial clínico** y datos personales
+- **Asignación a psicólogos** con validación
+- **Formulario de agendamiento autónomo** para pacientes (público)
+- **Control de acceso** por rol de usuario
 
 ### 📅 Sistema de Sesiones
 
@@ -66,7 +77,67 @@ Una aplicación web completa para la gestión de consultas psicológicas, diseñ
 - Componentes optimizados para mobile y desktop
 - Diseño moderno con Material-UI
 
-## 🛠️ Tecnologías
+## � Sistema de Roles
+
+La aplicación implementa un **Control de Acceso Basado en Roles (RBAC)** con tres niveles de usuario:
+
+### 👑 **Administrador**
+
+- **Permisos**: Gestión completa de psicólogos
+- **Acceso a**:
+  - ✅ CRUD completo de psicólogos
+  - ✅ Ver todas las especialidades
+  - ✅ Activar/desactivar cuentas
+- **Rutas**: `/admin/psychs`
+- **Login**: Cuenta admin predeterminada
+
+### 👨‍⚕️ **Psicólogo**
+
+- **Permisos**: Gestión completa de pacientes
+- **Acceso a**:
+  - ✅ CRUD completo de pacientes
+  - ✅ Ver sesiones asignadas
+  - ✅ Gestionar historial clínico
+- **Rutas**: `/admin/patients`, `/psychologist/sessions`
+- **Login**: Cuenta creada por admin
+
+### 👤 **Paciente (Público)**
+
+- **Permisos**: Agendamiento sin registro
+- **Acceso a**:
+  - ✅ Agendar sesiones libremente
+  - ✅ Ver lista básica de psicólogos
+  - ✅ Seleccionar profesional y horario
+- **Rutas**: `/patient-entry` (público)
+- **Login**: No requerido
+
+### 🔒 **Implementación Técnica**
+
+#### Backend:
+
+```javascript
+// Middleware de autenticación
+authMiddleware → Verifica JWT válido
+checkRole(['admin']) → Verifica permisos específicos
+```
+
+#### Frontend:
+
+```typescript
+// Componente de ruta protegida
+<PrivateRoute requiredRole="admin">
+  <AdminPage />
+</PrivateRoute>
+```
+
+#### Headers Authorization:
+
+```javascript
+// Todas las requests autenticadas
+Authorization: Bearer <jwt_token>
+```
+
+## �🛠️ Tecnologías
 
 ### Frontend
 
@@ -234,31 +305,53 @@ npm start
 
 ## 🔌 API Endpoints
 
-### Autenticación
+### 🔑 Autenticación
 
-- `POST /api/auth/login` - Iniciar sesión
-- `POST /api/auth/register` - Registrar usuario (admin)
+- `POST /api/auth/login` - **Público** - Iniciar sesión
 
-### Psicólogos
+### 👨‍⚕️ Psicólogos
 
-- `GET /api/psychologists` - Obtener todos los psicólogos
-- `POST /api/psychologists` - Crear psicólogo
-- `PUT /api/psychologists/:id` - Actualizar psicólogo
-- `DELETE /api/psychologists/:id` - Eliminar psicólogo
+- `GET /api/psychologists/public` - **Público** - Lista básica para agendamiento
+- `GET /api/psychologists` - **🔒 Admin** - Obtener todos los psicólogos
+- `GET /api/psychologists/:id` - **🔒 Admin** - Obtener psicólogo específico
+- `POST /api/psychologists` - **🔒 Admin** - Crear psicólogo
+- `PUT /api/psychologists/:id` - **🔒 Admin** - Actualizar psicólogo
+- `DELETE /api/psychologists/:id` - **🔒 Admin** - Eliminar psicólogo
 
-### Pacientes
+### 👥 Pacientes
 
-- `GET /api/patients` - Obtener todos los pacientes
-- `POST /api/patients` - Crear paciente
-- `PUT /api/patients/:id` - Actualizar paciente
-- `DELETE /api/patients/:id` - Eliminar paciente
+- `GET /api/patients` - **🔒 Psychologist** - Obtener todos los pacientes
+- `GET /api/patients/:id` - **🔒 Psychologist** - Obtener paciente específico
+- `POST /api/patients` - **🔒 Psychologist** - Crear paciente
+- `PUT /api/patients/:id` - **🔒 Psychologist** - Actualizar paciente
+- `DELETE /api/patients/:id` - **🔒 Psychologist** - Eliminar paciente
 
-### Sesiones
+### 📅 Sesiones
 
-- `GET /api/sessions` - Obtener todas las sesiones
-- `POST /api/sessions` - Crear sesión
-- `PUT /api/sessions/:id` - Actualizar sesión
-- `DELETE /api/sessions/:id` - Eliminar sesión
+- `GET /api/sessions` - **Público** - Obtener todas las sesiones
+- `GET /api/sessions/:id` - **Público** - Obtener sesión específica
+- `POST /api/sessions` - **Público** - Crear sesión (agendamiento)
+- `PUT /api/sessions/:id` - **Público** - Actualizar sesión
+- `DELETE /api/sessions/:id` - **Público** - Eliminar sesión
+
+### 🔐 Headers de Autorización
+
+```javascript
+// Para rutas protegidas, incluir en headers:
+{
+  "Authorization": "Bearer <jwt_token>",
+  "Content-Type": "application/json"
+}
+```
+
+### 📋 Códigos de Respuesta
+
+- **200** - Operación exitosa
+- **201** - Recurso creado exitosamente
+- **401** - Token no válido o ausente
+- **403** - Sin permisos para esta operación
+- **404** - Recurso no encontrado
+- **500** - Error interno del servidor
 
 ## 📁 Estructura del Proyecto
 

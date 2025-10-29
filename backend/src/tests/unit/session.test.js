@@ -7,11 +7,10 @@ const mockFind = jest.fn();
 const mockFindById = jest.fn();
 const mockFindByIdAndUpdate = jest.fn();
 
-// Helper para simular .populate().populate() -> Promise.resolve(result)
+// Helper para simular .populate() -> Promise.resolve(result)
 const makePopulateChain = (result) => {
-  const secondPopulate = jest.fn().mockResolvedValue(result);
-  const firstPopulate = jest.fn().mockReturnValue({ populate: secondPopulate });
-  return { firstPopulate, secondPopulate };
+  const populate = jest.fn().mockResolvedValue(result);
+  return { populate };
 };
 
 jest.unstable_mockModule("../../models/Session.model.js", () => {
@@ -64,28 +63,28 @@ describe("Session Controller - Unit", () => {
 
   it("should return all sessions", async () => {
     const mockSessions = [{ title: "Session1" }, { title: "Session2" }];
-    // Session.find().populate().populate() -> mock chain
-    const { firstPopulate } = makePopulateChain(mockSessions);
-    mockFind.mockReturnValueOnce({ populate: firstPopulate });
+    // Session.find().populate() -> mock chain
+    const { populate } = makePopulateChain(mockSessions);
+    mockFind.mockReturnValueOnce({ populate });
 
     await getAllSessions({}, res);
 
     expect(mockFind).toHaveBeenCalled();
-    expect(firstPopulate).toHaveBeenCalled(); // al menos la primera populate fue llamada
+    expect(populate).toHaveBeenCalled(); // populate fue llamada
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockSessions);
   });
 
   it("should return session by id", async () => {
     const mockSession = { _id: "some-id", title: "Session1" };
-    const { firstPopulate } = makePopulateChain(mockSession);
-    mockFindById.mockReturnValueOnce({ populate: firstPopulate });
+    const { populate } = makePopulateChain(mockSession);
+    mockFindById.mockReturnValueOnce({ populate });
 
     const req = { params: { id: "some-id" } };
     await getSessionById(req, res);
 
     expect(mockFindById).toHaveBeenCalledWith("some-id");
-    expect(firstPopulate).toHaveBeenCalled();
+    expect(populate).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockSession);
   });

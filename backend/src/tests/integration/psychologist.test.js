@@ -4,8 +4,10 @@ import request from "supertest";
 import bcrypt from "bcrypt";
 import app from "../../app.js";
 import { Psychologist } from "../../models/psychologist.model.js";
+import { generateToken, getAuthHeader } from "../setup.js";
 
 let mongoServer;
+let adminToken;
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
@@ -16,6 +18,13 @@ beforeAll(async () => {
   }
 
   await mongoose.connect(uri, { dbName: "test" });
+
+  // Generar token de admin para las pruebas
+  adminToken = generateToken({
+    id: "admin123",
+    role: "admin",
+    name: "Test Admin",
+  });
 });
 
 afterAll(async () => {
@@ -36,7 +45,10 @@ describe("Psychologist Integration Tests", () => {
       specialty: "Psicología clínica",
     };
 
-    const res = await request(app).post("/api/psychologists").send(newPsych);
+    const res = await request(app)
+      .post("/api/psychologists")
+      .set(getAuthHeader(adminToken))
+      .send(newPsych);
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty(
@@ -56,7 +68,9 @@ describe("Psychologist Integration Tests", () => {
       { name: "Dr. Dos", email: "dos@test.com", password: "hash2" },
     ]);
 
-    const res = await request(app).get("/api/psychologists");
+    const res = await request(app)
+      .get("/api/psychologists")
+      .set(getAuthHeader(adminToken));
 
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBe(2);
@@ -70,7 +84,9 @@ describe("Psychologist Integration Tests", () => {
       password: "123456",
     });
 
-    const res = await request(app).get(`/api/psychologists/${psych._id}`);
+    const res = await request(app)
+      .get(`/api/psychologists/${psych._id}`)
+      .set(getAuthHeader(adminToken));
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("email", "buscar@test.com");
@@ -88,6 +104,7 @@ describe("Psychologist Integration Tests", () => {
 
     const res = await request(app)
       .put(`/api/psychologists/${psych._id}`)
+      .set(getAuthHeader(adminToken))
       .send(updatedData);
 
     expect(res.statusCode).toBe(200);
@@ -106,7 +123,9 @@ describe("Psychologist Integration Tests", () => {
       isActive: true,
     });
 
-    const res = await request(app).delete(`/api/psychologists/${psych._id}`);
+    const res = await request(app)
+      .delete(`/api/psychologists/${psych._id}`)
+      .set(getAuthHeader(adminToken));
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("isActive", false);
@@ -117,7 +136,9 @@ describe("Psychologist Integration Tests", () => {
 
   it("debería devolver 404 si el psicólogo no existe al buscarlo", async () => {
     const fakeId = new mongoose.Types.ObjectId();
-    const res = await request(app).get(`/api/psychologists/${fakeId}`);
+    const res = await request(app)
+      .get(`/api/psychologists/${fakeId}`)
+      .set(getAuthHeader(adminToken));
     expect(res.statusCode).toBe(404);
   });
 });
