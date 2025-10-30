@@ -1,6 +1,6 @@
-# Guía de Despliegue en Vercel
+# Guía de Despliegue en Vercel - Monorepo
 
-## Pasos para desplegar el proyecto en Vercel:
+## Configuración actualizada para monorepo:
 
 ### 1. Preparar la base de datos MongoDB Atlas
 
@@ -15,15 +15,22 @@
 1. Asegúrate de que todos los cambios estén commiteados:
    ```bash
    git add .
-   git commit -m "Preparar para despliegue en Vercel"
+   git commit -m "Configurar monorepo para Vercel"
    git push origin main
    ```
 
-### 3. Configurar Vercel
+### 3. Configurar Vercel para Monorepo
 
 1. Ve a [vercel.com](https://vercel.com) y crea una cuenta/inicia sesión
 2. Conecta tu repositorio de GitHub
 3. Importa el proyecto `managment-psychology-app`
+
+**IMPORTANTE: Configuración específica en Vercel:**
+- **Framework Preset**: Other
+- **Root Directory**: `./` (dejar como está)
+- **Build Command**: `cd frontend && npm install && npm run build`
+- **Output Directory**: `frontend/dist`
+- **Install Command**: `npm install`
 
 ### 4. Configurar variables de entorno en Vercel
 
@@ -32,19 +39,28 @@ En el dashboard de Vercel, ve a Settings > Environment Variables y agrega:
 ```
 MONGODB_URI=mongodb+srv://tu_usuario:tu_password@cluster.mongodb.net/psychology_app?retryWrites=true&w=majority
 JWT_SECRET=tu_jwt_secret_muy_seguro_y_largo_para_produccion_de_al_menos_64_caracteres
-PORT=3000
 CORS_ORIGIN=https://tu-dominio-de-vercel.vercel.app
 ```
 
 **Importante:**
-
 - Genera un JWT_SECRET seguro (puedes usar: `openssl rand -base64 64`)
 - Reemplaza los valores de MongoDB con los reales de tu cluster
 - El CORS_ORIGIN se actualizará después del primer despliegue
 
-### 5. Configuración del proyecto en Vercel
+### 5. Estructura del proyecto para Vercel
 
-Vercel debería detectar automáticamente la configuración gracias al archivo `vercel.json`, pero asegúrate de que:
+El proyecto está configurado con:
+- **Frontend**: React + Vite en `/frontend`
+- **Backend**: Express API en `/api` (serverless functions)
+- **Configuración**: `vercel.json` maneja el routing
+
+### 6. Verificar archivos clave
+
+Asegúrate de que estos archivos existan:
+- ✅ `vercel.json` - Configuración de build y routing
+- ✅ `api/index.js` - Función serverless que maneja toda la API
+- ✅ `api/package.json` - Dependencias del backend
+- ✅ `frontend/package.json` - Configuración del frontend
 
 - **Framework Preset**: Vite
 - **Root Directory**: `./` (raíz del proyecto)
