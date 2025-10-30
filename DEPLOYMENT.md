@@ -26,6 +26,7 @@
 3. Importa el proyecto `managment-psychology-app`
 
 **IMPORTANTE: Configuración específica en Vercel:**
+
 - **Framework Preset**: Other
 - **Root Directory**: `./` (dejar como está)
 - **Build Command**: `cd frontend && npm install && npm run build`
@@ -43,6 +44,7 @@ CORS_ORIGIN=https://tu-dominio-de-vercel.vercel.app
 ```
 
 **Importante:**
+
 - Genera un JWT_SECRET seguro (puedes usar: `openssl rand -base64 64`)
 - Reemplaza los valores de MongoDB con los reales de tu cluster
 - El CORS_ORIGIN se actualizará después del primer despliegue
@@ -50,6 +52,7 @@ CORS_ORIGIN=https://tu-dominio-de-vercel.vercel.app
 ### 5. Estructura del proyecto para Vercel
 
 El proyecto está configurado con:
+
 - **Frontend**: React + Vite en `/frontend`
 - **Backend**: Express API en `/api` (serverless functions)
 - **Configuración**: `vercel.json` maneja el routing
@@ -57,6 +60,7 @@ El proyecto está configurado con:
 ### 6. Verificar archivos clave
 
 Asegúrate de que estos archivos existan:
+
 - ✅ `vercel.json` - Configuración de build y routing
 - ✅ `api/index.js` - Función serverless que maneja toda la API
 - ✅ `api/package.json` - Dependencias del backend

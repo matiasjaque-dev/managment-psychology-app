@@ -1,6 +1,7 @@
 # SOLUCIÓN RECOMENDADA: Separar Frontend y Backend
 
 ## Problema actual:
+
 - Vercel está intentando hacer build del monorepo completo
 - La configuración de monorepo es compleja en Vercel
 - Los errores 404 indican que el frontend no se está sirviendo correctamente
@@ -8,6 +9,7 @@
 ## Solución 1: Repositorios Separados (MÁS FÁCIL)
 
 ### Paso 1: Crear repositorio para el Frontend
+
 ```bash
 # Crear nuevo repositorio solo para frontend
 mkdir managment-psychology-frontend
@@ -28,6 +30,7 @@ git push -u origin main
 ```
 
 ### Paso 2: Crear repositorio para el Backend
+
 ```bash
 # Crear nuevo repositorio solo para backend
 mkdir managment-psychology-backend
@@ -48,12 +51,14 @@ git push -u origin main
 ```
 
 ### Paso 3: Desplegar Frontend en Vercel
+
 1. Importar el repositorio `managment-psychology-frontend` en Vercel
 2. Framework: Vite
 3. Build Command: `npm run build`
 4. Output Directory: `dist`
 
 ### Paso 4: Desplegar Backend en Railway/Render
+
 1. Conectar el repositorio `managment-psychology-backend`
 2. Start Command: `npm start`
 3. Configurar variables de entorno
@@ -61,12 +66,14 @@ git push -u origin main
 ## Solución 2: Mantener Monorepo con proyectos separados
 
 ### Para el Frontend:
+
 1. En Vercel, crear proyecto nuevo
 2. Root Directory: `frontend`
 3. Framework: Vite
 4. Build Command: `npm run build`
 
 ### Para el Backend:
+
 1. En Railway/Render, crear proyecto nuevo
 2. Root Directory: `backend`
 3. Start Command: `npm start`
