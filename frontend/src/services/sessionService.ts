@@ -1,7 +1,8 @@
 import axios from "axios";
 import type { Session } from "../types/Session";
+import { API_BASE_URL } from "../config/api";
 
-const API = "http://localhost:4000/api/sessions";
+const API = `${API_BASE_URL}/sessions`;
 
 const getAuthHeader = (token: string) => ({
   headers: {

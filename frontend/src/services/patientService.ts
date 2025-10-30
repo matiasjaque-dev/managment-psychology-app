@@ -1,7 +1,8 @@
 import axios from "axios";
 import type { Patient } from "../types/Patient";
+import { API_BASE_URL } from "../config/api";
 
-const API = "http://localhost:4000/api/patients";
+const API = `${API_BASE_URL}/patients`;
 
 // Crea una función para obtener headers con el token
 const getAuthHeader = (token: string) => ({

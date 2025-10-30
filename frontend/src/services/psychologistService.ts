@@ -1,8 +1,9 @@
 import axios from "axios";
 import type { Psychologist } from "../types/psychologist";
+import { API_BASE_URL } from "../config/api";
 //import { useAuth } from "../context/AuthContext";
 
-const API = "http://localhost:4000/api/psychologists";
+const API = `${API_BASE_URL}/psychologists`;
 
 // Crea una función para obtener headers con el token
 const getAuthHeader = (token: string) => ({
@@ -44,10 +45,7 @@ export const getPsychologistById = async (id: string, token: string) => {
     const res = await axios.get(`${API}/${id}`, getAuthHeader(token));
     return res.data;
   } catch (error: any) {
-    console.error(
-      "Error al obtener psicólogo:",
-      error.response?.data || error
-    );
+    console.error("Error al obtener psicólogo:", error.response?.data || error);
     throw error;
   }
 };
