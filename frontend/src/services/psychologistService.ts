@@ -29,11 +29,14 @@ export const getAllPsychologists = async (token: string) => {
 // Función pública para pacientes (no requiere token)
 export const getPublicPsychologists = async () => {
   try {
-    const res = await axios.get(`${API}/public`);
+    const url = `${API}/public`;
+    console.log('🌐 Haciendo request a:', url);
+    const res = await axios.get(url);
+    console.log('📦 Respuesta recibida:', res.data);
     return res.data;
   } catch (error: any) {
     console.error(
-      "Error al obtener psicólogos públicos:",
+      "❌ Error al obtener psicólogos públicos:",
       error.response?.data || error
     );
     throw error;

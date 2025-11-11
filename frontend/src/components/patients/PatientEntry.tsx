@@ -51,11 +51,13 @@ const PatientEntry = () => {
     const fetchPsychologists = async () => {
       try {
         setError(null);
+        console.log('🔍 Intentando cargar psicólogos...');
         const data = await getPublicPsychologists();
+        console.log('✅ Psicólogos cargados:', data);
         setPsychologists(data.filter((psych: Psychologist) => psych.isActive));
       } catch (error) {
+        console.error('❌ Error loading psychologists:', error);
         setError("Error al cargar los psicólogos disponibles");
-        console.error("Error loading psychologists:", error);
       }
     };
     fetchPsychologists();
