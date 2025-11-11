@@ -5,9 +5,10 @@ import app from "./app.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(MONGODB_URI)
   .then(() => {
     console.log("✅ MongoDB conectado");
     app.listen(PORT, () =>

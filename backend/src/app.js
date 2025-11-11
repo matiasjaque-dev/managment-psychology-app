@@ -8,11 +8,35 @@ import authRoutes from "./routes/auth.routes.js";
 const app = express();
 
 // Configuración de CORS para producción
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://managment-psychology-app.vercel.app',
+  // Railway genera URLs aleatorias, por eso usamos una función
+];
+
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || [
-    "http://localhost:5173",
-    "http://localhost:3000",
-  ],
+  origin: function (origin, callback) {
+    // Permitir requests sin origin (como apps móviles)
+    if (!origin) return callback(null, true);
+    
+    // Verificar si el origin está en la lista permitida
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Permitir dominios de Vercel
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    
+    // Permitir dominios de Railway
+    if (origin.endsWith('.railway.app')) {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };

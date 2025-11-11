@@ -1,0 +1,2 @@
+# Railway configuration
+web: node src/index.js
