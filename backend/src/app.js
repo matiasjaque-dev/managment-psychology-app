@@ -12,7 +12,6 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'https://managment-psychology-app.vercel.app',
-  // Railway genera URLs aleatorias, por eso usamos una función
 ];
 
 const corsOptions = {
@@ -30,7 +29,12 @@ const corsOptions = {
       return callback(null, true);
     }
     
-    // Permitir dominios de Railway
+    // Permitir dominios de Render
+    if (origin.endsWith('.onrender.com')) {
+      return callback(null, true);
+    }
+    
+    // Permitir dominios de Railway (por si después cambias)
     if (origin.endsWith('.railway.app')) {
       return callback(null, true);
     }
