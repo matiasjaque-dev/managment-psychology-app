@@ -47,6 +47,9 @@ const PatientEntry = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Debug render
+  console.log('🎨 PatientEntry render - psychologists.length:', psychologists.length);
+
   useEffect(() => {
     const fetchPsychologists = async () => {
       try {
@@ -55,7 +58,10 @@ const PatientEntry = () => {
         console.log('🌐 API_BASE_URL actual:', import.meta.env.PROD ? 'PRODUCCIÓN' : 'DESARROLLO');
         const data = await getPublicPsychologists();
         console.log('✅ Psicólogos cargados:', data);
-        setPsychologists(data.filter((psych: Psychologist) => psych.isActive));
+        const activePsychologists = data.filter((psych: Psychologist) => psych.isActive);
+        console.log('🔄 Psicólogos activos filtrados:', activePsychologists);
+        setPsychologists(activePsychologists);
+        console.log('🎯 Estado actualizado - Cantidad de psicólogos:', activePsychologists.length);
       } catch (error) {
         console.error('❌ Error loading psychologists:', error);
         setError("Error al cargar los psicólogos disponibles");
@@ -63,6 +69,12 @@ const PatientEntry = () => {
     };
     fetchPsychologists();
   }, []);
+
+  // Debug del estado de psychologists
+  useEffect(() => {
+    console.log('📊 Estado psychologists actualizado:', psychologists);
+    console.log('📊 Cantidad de psicólogos en estado:', psychologists.length);
+  }, [psychologists]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-CL", {
@@ -290,20 +302,30 @@ const PatientEntry = () => {
                 },
               }}
             >
-              {psychologists.map((psychologist) => (
-                <MenuItem key={psychologist._id} value={psychologist._id}>
-                  <Box>
-                    <Typography variant="body1" sx={{ fontWeight: "medium" }}>
-                      {psychologist.name}
-                    </Typography>
-                    {psychologist.specialty && (
-                      <Typography variant="caption" color="text.secondary">
-                        {psychologist.specialty}
-                      </Typography>
-                    )}
-                  </Box>
+              {psychologists.length === 0 && (
+                <MenuItem disabled>
+                  <Typography variant="body2" color="text.secondary">
+                    Cargando psicólogos...
+                  </Typography>
                 </MenuItem>
-              ))}
+              )}
+              {psychologists.map((psychologist) => {
+                console.log('📋 Renderizando psicólogo:', psychologist.name);
+                return (
+                  <MenuItem key={psychologist._id} value={psychologist._id}>
+                    <Box>
+                      <Typography variant="body1" sx={{ fontWeight: "medium" }}>
+                        {psychologist.name}
+                      </Typography>
+                      {psychologist.specialty && (
+                        <Typography variant="caption" color="text.secondary">
+                          {psychologist.specialty}
+                        </Typography>
+                      )}
+                    </Box>
+                  </MenuItem>
+                );
+              })}
             </TextField>
           </Box>
 
