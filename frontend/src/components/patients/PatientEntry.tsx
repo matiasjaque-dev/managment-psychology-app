@@ -58,10 +58,10 @@ const PatientEntry = () => {
         console.log('🌐 API_BASE_URL actual:', import.meta.env.PROD ? 'PRODUCCIÓN' : 'DESARROLLO');
         const data = await getPublicPsychologists();
         console.log('✅ Psicólogos cargados:', data);
-        const activePsychologists = data.filter((psych: Psychologist) => psych.isActive);
-        console.log('🔄 Psicólogos activos filtrados:', activePsychologists);
-        setPsychologists(activePsychologists);
-        console.log('🎯 Estado actualizado - Cantidad de psicólogos:', activePsychologists.length);
+        // Removemos el filtro isActive ya que el endpoint /public ya devuelve solo activos
+        console.log('🔄 Usando todos los psicólogos del endpoint público');
+        setPsychologists(data);
+        console.log('🎯 Estado actualizado - Cantidad de psicólogos:', data.length);
       } catch (error) {
         console.error('❌ Error loading psychologists:', error);
         setError("Error al cargar los psicólogos disponibles");
