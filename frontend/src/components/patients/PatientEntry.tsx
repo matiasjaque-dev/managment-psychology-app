@@ -52,6 +52,7 @@ const PatientEntry = () => {
       try {
         setError(null);
         console.log('🔍 Intentando cargar psicólogos...');
+        console.log('🌐 API_BASE_URL actual:', import.meta.env.PROD ? 'PRODUCCIÓN' : 'DESARROLLO');
         const data = await getPublicPsychologists();
         console.log('✅ Psicólogos cargados:', data);
         setPsychologists(data.filter((psych: Psychologist) => psych.isActive));
